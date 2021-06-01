@@ -106,11 +106,7 @@ if ( ! class_exists( __NAMESPACE__ . '\Api' ) ) {
      * @since  0.1.0
      */
     public static function authorize () {
-      $authorized = (
-        current_user_can( 'administrator' )
-      );
-
-      if ( ! $authorized ) {
+      if ( ! current_user_can( 'manage_options' ) ) {
         return new \WP_Error(
           'rest_forbidden',
           esc_html__( 'You do not have access.', 'wpvs' ),

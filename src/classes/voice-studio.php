@@ -56,10 +56,15 @@ if ( ! class_exists( 'Voice_Studio' ) ) {
       $classes = [
         'api',
         'role',
+        'roles',
       ];
       foreach ( $classes as $class ) {
         require plugin_dir_path( __FILE__ ) . 'voice-studio/' . $class . '.php';
       }
+
+      // Initialize API class.
+      $api = new Voice_Studio\Api();
+      $api->init();
 
       // Setup user roles and capabilities to add.
       self::$roles        = [];
@@ -68,42 +73,107 @@ if ( ! class_exists( 'Voice_Studio' ) ) {
           'role'          => 'student',
           'fallback_role' => 'subscriber',
           'display_name'  => 'Student',
-          'capabilities'  => [
-            'student',
-          ],
+          'capabilities'  => array_merge(
+            // Read.
+            get_role( 'subscriber' )->capabilities,
+            [ 'student' => true ],
+          ),
         ],
         [
           'role'          => 'parent',
           'fallback_role' => 'subscriber',
           'display_name'  => 'Parent of Student',
-          'capabilities'  => [
-            'parent',
-          ],
+          'capabilities'  => array_merge(
+            // Read.
+            get_role( 'subscriber' )->capabilities,
+            [ 'parent' => true ],
+          ),
         ],
         [
           'role'          => 'teacher',
-          'fallback_role' => 'editor',
+          'fallback_role' => 'author',
           'display_name'  => 'Teacher',
-          'capabilities'  => [
-            'teacher',
-          ],
+          'capabilities'  => array_merge(
+            // Manage & Publish own posts.
+            // Upload files.
+            // Create draft posts.
+            // Read.
+            get_role( 'author' )->capabilities,
+            [ 'teacher' => true ],
+          ),
         ],
         [
           'role'          => 'owner',
           'fallback_role' => 'administrator',
           'display_name'  => 'Owner',
-          'capabilities'  => [
-            'owner',
-          ],
+          'capabilities'  => array_merge(
+            // Manage & Publish others’ posts and pages.
+            // Manage & Publish pages.
+            // Manage & Read private posts and pages.
+            // Manage categories and links.
+            // Moderate comments.
+            // Insert unfiltered HTML.
+            // Manage & Publish own posts.
+            // Upload files.
+            // Create draft posts.
+            // Read.
+            get_role( 'editor' )->capabilities,
+            [ 'owner' => true ],
+            [
+              // Manage users.
+              'list_users' => true,
+              'create_users' => true,
+              'edit_users' => true,
+              'promote_users' => true,
+              'remove_users' => true,
+              'delete_users' => true,
+              // Manage widgets, menus, customization.
+              'edit_dashboard' => true,
+              'edit_theme_options' => true,
+              // 'customize' => true,
+              // Edit files.
+              // 'edit_files' => true,
+              // Manage settings.
+              // 'manage_options',
+              // Manage site.
+              // 'update_core',
+            ],
+          ),
+        ],
+        [
+          'role'          => 'developer',
+          'fallback_role' => 'administrator',
+          'display_name'  => 'Web Developer',
+          'capabilities'  => array_merge(
+            // Manage plugins.
+            // Manage themes.
+            // Manage users.
+            // Import and export.
+            // Manage widgets, menus, customization.
+            // Manage settings.
+            // Manage site.
+            // Manage & Publish others’ posts and pages.
+            // Manage & Publish pages.
+            // Manage & Read private posts and pages.
+            // Manage categories and links.
+            // Moderate comments.
+            // Insert unfiltered HTML.
+            // Manage & Publish own posts.
+            // Upload files.
+            // Create draft posts.
+            // Read.
+            get_role( 'administrator' )->capabilities,
+            [ 'developer' => true ],
+          ),
         ],
       ];
       foreach ( self::$roles_to_add as $role ) {
         self::$roles[] = new Voice_Studio\Role( $role );
       }
 
-      // Initialize API class.
-      $api = new Voice_Studio\Api();
-      $api->init();
+      // Initialize Roles class.
+      $roles = new Voice_Studio\Roles();
+      $roles->init();
     }
 
     /**
