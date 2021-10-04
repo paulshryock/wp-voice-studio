@@ -32,9 +32,18 @@ if ( ! class_exists( 'Voice_Studio' ) ) {
      *
      * @access private
      * @since  0.1.0
-     * @var    Voice_Studio\Post_Types
+     * @var    array
      */
-    private $post_types;
+    private static $post_types;
+
+    /**
+     * Post types to add.
+     *
+     * @access public
+     * @since  unreleased
+     * @var    array
+     */
+    public static $post_types_to_add;
 
     /**
      * API.
@@ -55,6 +64,7 @@ if ( ! class_exists( 'Voice_Studio' ) ) {
       // Require classes.
       $classes = [
         'api',
+        'post-type',
         'role',
         'roles',
       ];
@@ -65,6 +75,80 @@ if ( ! class_exists( 'Voice_Studio' ) ) {
       // Initialize API class.
       $api = new Voice_Studio\Api();
       $api->init();
+
+      // Setup post types and taxonomies to add.
+      self::$post_types        = [];
+      self::$post_types_to_add = [
+        [
+          'slug' => 'group_class',
+          'args' => [
+            'labels'             => [
+              'name'                     => __( 'Group Classes', 'wpvs' ),
+              'singular_name'            => __( 'Group Class', 'wpvs' ),
+              'add_new_item'             => __( 'Add new Group Class', 'wpvs' ),
+              'edit_item'                => __( 'Edit Group Class', 'wpvs' ),
+              'new_item'                 => __( 'New Group Class', 'wpvs' ),
+              'view_item'                => __( 'View Group Class', 'wpvs' ),
+              'view_items'               => __( 'View Group Classes', 'wpvs' ),
+              'search_items'             => __( 'Search Group Classes', 'wpvs' ),
+              'not_found'                => __( 'No Group Classes found', 'wpvs' ),
+              'not_found_in_trash'       => __( 'No Group Classes found in Trash', 'wpvs' ),
+              'parent_item_colon'        => __( 'Parent Group Class:', 'wpvs' ),
+              'all_items'                => __( 'All Group Classes', 'wpvs' ),
+              'archives'                 => __( 'Group Class archives', 'wpvs' ),
+              'attributes'               => __( 'Group Class attributes', 'wpvs' ),
+              'insert_into_item'         => __( 'Insert into Group Class', 'wpvs' ),
+              'uploaded_to_this_item'    => __( 'Uploaded to this Group Class', 'wpvs' ),
+              'filter_items_list'        => __( 'Filter Group Classes list', 'wpvs' ),
+              'items_list_navigation'    => __( 'Group Classes list navigation', 'wpvs' ),
+              'items_list'               => __( 'Group Classes list', 'wpvs' ),
+              'item_published'           => __( 'Group Class published', 'wpvs' ),
+              'item_published_privately' => __( 'Group Class published privately', 'wpvs' ),
+              'item_reverted_to_draft'   => __( 'Group Class reverted to draft', 'wpvs' ),
+              'item_scheduled'           => __( 'Group Class scheduled', 'wpvs' ),
+              'item_updated'             => __( 'Group Class updated', 'wpvs' ),
+              'item_link'                => __( 'Group Class link', 'wpvs' ),
+              'item_link_description'    => __( 'A link to a Group Class', 'wpvs' ),
+            ],
+            // 'description',
+            'public'             => true,
+            'hierarchical'       => false,
+            'publicly_queryable' => true,
+            'show_in_rest'       => true,
+            'rest_base'          => 'group_classes',
+            // 'rest_controller_class', // (string) REST API Controller class name. Default is 'WP_REST_Posts_Controller'.
+            // 'menu_position' => 20,
+            'menu_icon'          => 'dashicons-groups',
+            // 'capability_type' => [
+            //   'group_class',
+            //   'group_classes',
+            // ],
+            // 'capabilities' => [
+            //   'owner'
+            // ],
+            // 'map_meta_cap',
+            'supports'           => [
+              'title',
+              'editor',
+              'excerpt',
+              'thumbnail',
+            ],
+            // 'register_meta_box_cb',
+            // 'taxonomies',
+            'has_archive'        => false,
+            // 'rewrite',
+            // 'query_var',
+            'delete_with_user'   => false,
+            // 'template',
+            // 'template_lock',
+          ],
+        ],
+      ];
+      foreach ( self::$post_types_to_add as $post_type_to_add ) {
+        $post_type = new Voice_Studio\Post_Type( $post_type_to_add );
+        $post_type->init();
+        self::$post_types[] = $post_type;
+      }
 
       // Setup user roles and capabilities to add.
       self::$roles        = [];
@@ -118,7 +202,18 @@ if ( ! class_exists( 'Voice_Studio' ) ) {
             // Create draft posts.
             // Read.
             get_role( 'editor' )->capabilities,
-            [ 'owner' => true ],
+            [
+              'owner'                => true,
+              // Group classes.
+              // 'read_group_class'   => true,
+              // 'edit_group_class'   => true,
+              // 'delete_group_class' => true,
+              // 'edit_group_classes' => true,
+              // 'edit_others_group_classes' => true,
+              // 'delete_group_classes' => true,
+              // 'publish_group_classes' => true,
+              // 'read_private_group_classes' => true,
+            ],
             [
               // Manage users.
               'list_users' => true,
@@ -134,7 +229,7 @@ if ( ! class_exists( 'Voice_Studio' ) ) {
               // Edit files.
               // 'edit_files' => true,
               // Manage settings.
-              // 'manage_options',
+              'manage_options',
               // Manage site.
               // 'update_core',
             ],
@@ -163,12 +258,23 @@ if ( ! class_exists( 'Voice_Studio' ) ) {
             // Create draft posts.
             // Read.
             get_role( 'administrator' )->capabilities,
-            [ 'developer' => true ],
+            [
+              'developer'            => true,
+              // Group classes.
+              // 'read_group_class'   => true,
+              // 'edit_group_class'   => true,
+              // 'delete_group_class' => true,
+              // 'edit_group_classes' => true,
+              // 'edit_others_group_classes' => true,
+              // 'delete_group_classes' => true,
+              // 'publish_group_classes' => true,
+              // 'read_private_group_classes' => true,
+            ],
           ),
         ],
       ];
-      foreach ( self::$roles_to_add as $role ) {
-        self::$roles[] = new Voice_Studio\Role( $role );
+      foreach ( self::$roles_to_add as $role_to_add ) {
+        self::$roles[] = new Voice_Studio\Role( $role_to_add );
       }
 
       // Initialize Roles class.
@@ -191,8 +297,13 @@ if ( ! class_exists( 'Voice_Studio' ) ) {
       // Populate roles to users who previously had them.
       Voice_Studio\Role::populate();
       
-      // @todo: Register post types and taxonomies.
-      // @todo: Flush Permalinks (flush_rewrite_rules())
+      // Register post types and taxonomies.
+      // foreach ( self::$post_types as $post_type ) {
+      //   $post_type->add();
+      // }
+
+      // @todo: Flush permalinks if needed.
+      // flush_rewrite_rules();
     }
 
     /**
@@ -209,7 +320,9 @@ if ( ! class_exists( 'Voice_Studio' ) ) {
       
       // @todo: Unregister post types and taxonomies. (unregister_post_type())
       // @todo: Flush Cache/Temp
-      // @todo: Flush Permalinks (flush_rewrite_rules())
+
+      // @todo: Flush permalinks.
+      // flush_rewrite_rules();
     }
 
     /**

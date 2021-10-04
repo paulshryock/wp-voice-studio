@@ -18,6 +18,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [0.3.0] - 2021-10-04
+
+### Added
+- Group Class post type.
+
+### Changed
+- Allow Owner role to manage options.
+
 ## [0.2.0] - 2021-06-01
 
 ### Added
