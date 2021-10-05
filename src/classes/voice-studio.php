@@ -80,7 +80,7 @@ if ( ! class_exists( 'Voice_Studio' ) ) {
       self::$post_types        = [];
       self::$post_types_to_add = [
         [
-          'slug' => 'group_class',
+          'slug' => 'lessons/group-classes',
           'args' => [
             'labels'             => [
               'name'                     => __( 'Group Classes', 'wpvs' ),
@@ -216,22 +216,22 @@ if ( ! class_exists( 'Voice_Studio' ) ) {
             ],
             [
               // Manage users.
-              'list_users' => true,
-              'create_users' => true,
-              'edit_users' => true,
-              'promote_users' => true,
-              'remove_users' => true,
-              'delete_users' => true,
+              'list_users'         => true,
+              'create_users'       => true,
+              'edit_users'         => true,
+              'promote_users'      => true,
+              'remove_users'       => true,
+              'delete_users'       => true,
               // Manage widgets, menus, customization.
-              'edit_dashboard' => true,
+              'edit_dashboard'     => true,
               'edit_theme_options' => true,
               // 'customize' => true,
               // Edit files.
               // 'edit_files' => true,
               // Manage settings.
-              'manage_options',
+              'manage_options'     => true,
               // Manage site.
-              // 'update_core',
+              // 'update_core' => true,
             ],
           ),
         ],
