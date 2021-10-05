@@ -10,7 +10,7 @@
  * Plugin Name:       Voice Studio
  * Plugin URI:        https://github.com/paulshryock/wp-voice-studio
  * Description:       WordPress enhancements for your voice studio.
- * Version:           0.3.0
+ * Version:           0.3.1
  * Requires at least: 5.2
  * Requires PHP:      7.2
  * Author:            Paul Shryock
