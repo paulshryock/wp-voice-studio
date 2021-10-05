@@ -80,7 +80,7 @@ if ( ! class_exists( 'Voice_Studio' ) ) {
       self::$post_types        = [];
       self::$post_types_to_add = [
         [
-          'slug' => 'lessons/group-classes',
+          'slug' => 'group_class',
           'args' => [
             'labels'             => [
               'name'                     => __( 'Group Classes', 'wpvs' ),

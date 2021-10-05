@@ -1,6 +1,6 @@
 {
   "name": "voice-studio",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "WordPress enhancements for your voice studio.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [0.3.2] - 2021-10-05
+
+### Fixed
+- Revert group classes permalink structure.
+
 ## [0.3.1] - 2021-10-05
 
 ### Fixed
